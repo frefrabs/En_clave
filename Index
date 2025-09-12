@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Transformador de Texto</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 400px;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      resize: none;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔤 Transformador de Texto</h2>
+    <textarea id="entrada" placeholder="Escribe tu texto aquí..."></textarea>
+    <div>
+      <button onclick="transformar()">Transformar</button>
+      <button onclick="revertir()">Revertir</button>
+      <button onclick="limpiar()">Limpiar</button>
+    </div>
+    <textarea id="salida" placeholder="Resultado..." readonly></textarea>
+  </div>
+
+  <script>
+    const consonantes = "bcdfghjklmnpqrstvwxyz";
+    const vocales = "aeiou";
+
+    function transformar() {
+      const texto = document.getElementById("entrada").value;
+      document.getElementById("salida").value = procesarTexto(texto, true);
+    }
+
+    function revertir() {
+      const texto = document.getElementById("entrada").value;
+      document.getElementById("salida").value = procesarTexto(texto, false);
+    }
+
+    function limpiar() {
+      document.getElementById("entrada").value = "";
+      document.getElementById("salida").value = "";
+    }
+
+    function procesarTexto(texto, esTransformar) {
+      let resultado = "";
+      for (let letra of texto) {
+        const esMayus = letra === letra.toUpperCase();
+        let l = letra.toLowerCase();
+
+        if (vocales.includes(l)) {
+          let idx = vocales.indexOf(l);
+          if (esTransformar) {
+            idx = (idx + 1) % 5; // siguiente vocal
+          } else {
+            idx = (idx - 1 + 5) % 5; // vocal anterior
+          }
+          l = vocales[idx];
+
+        } else if (consonantes.includes(l)) {
+          let idx = consonantes.indexOf(l);
+          if (esTransformar) {
+            idx = (idx + 4) % consonantes.length; // +4 consonantes
+          } else {
+            idx = (idx - 4 + consonantes.length) % consonantes.length; // -4 consonantes
+          }
+          l = consonantes[idx];
+        }
+
+        if (esMayus) l = l.toUpperCase();
+        resultado += l;
+      }
+      return resultado;
+    }
+  </script>
+</body>
+</html>
